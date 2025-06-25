@@ -25,7 +25,7 @@ class AuthController {
         data: {
           ...req.body,
           password: await hashPassword(req.body.password),
-          role: req.body.role || "author",
+          role: req.body.role || "admin",
         },
       });
 
