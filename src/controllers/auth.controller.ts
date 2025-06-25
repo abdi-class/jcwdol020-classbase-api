@@ -4,6 +4,7 @@ import { hashPassword } from "../utils/hash";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { transport } from "../config/nodemailer";
+import { cloudinaryUpload } from "../config/cloudinary";
 
 class AuthController {
   public async register(
@@ -79,6 +80,37 @@ class AuthController {
         imgProfile: findUser.imgProfile,
         role: findUser.role,
         token,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async uploadProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      //
+      if (!req.file) {
+        throw { rc: 400, message: "No file exist" };
+      }
+
+      const upload = await cloudinaryUpload(req.file);
+
+      await prisma.user.update({
+        data: {
+          imgProfile: upload.secure_url,
+        },
+        where: {
+          id: Number(req.params.id),
+        },
+      });
+
+      res.status(200).send({
+        success: true,
+        message: "Update profile image success",
       });
     } catch (error) {
       next(error);

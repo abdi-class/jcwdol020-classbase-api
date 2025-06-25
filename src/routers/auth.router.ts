@@ -4,6 +4,7 @@ import {
   loginValidation,
   regisValidation,
 } from "../middleware/validation/auth";
+import { uploaderMemory } from "../middleware/uploader";
 class AuthRouter {
   private route: Router;
   private authController: AuthController;
@@ -17,6 +18,11 @@ class AuthRouter {
   private initializeRoutes(): void {
     this.route.post("/regis", regisValidation, this.authController.register);
     this.route.post("/login", loginValidation, this.authController.login);
+    this.route.patch(
+      "/profile-img/:id",
+      uploaderMemory().single("img"),
+      this.authController.uploadProfile
+    );
   }
 
   public getRouter(): Router {
