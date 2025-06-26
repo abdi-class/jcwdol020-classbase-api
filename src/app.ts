@@ -3,6 +3,7 @@ dotenv.config();
 import cors from "cors";
 import express, { Application, NextFunction, Request, Response } from "express";
 import AuthRouter from "./routers/auth.router";
+import logger from "./utils/logger";
 
 const PORT: string = process.env.PORT || "8080";
 
@@ -33,6 +34,9 @@ class App {
   private errorHandler(): void {
     this.app.use(
       (error: any, req: Request, res: Response, next: NextFunction) => {
+        logger.error(
+          `${req.method} ${req.path}: ${error.message} ${JSON.stringify(error)}`
+        );
         res.status(error.rc || 500).send(error);
       }
     );

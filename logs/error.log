@@ -1,0 +1,1 @@
+2025-06-26 20:05:15 [ERROR]: POST /auth/regis: User already exist {"rc":400,"success":false,"message":"User already exist"}
