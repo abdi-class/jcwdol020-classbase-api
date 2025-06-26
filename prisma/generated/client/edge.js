@@ -136,7 +136,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/abdialghi/Documents/Purwadhika/JCWDOL20/03_Back_end/intro-class-api/prisma/generated/client",
+      "value": "D:\\adi\\github\\jcwdol020-classbase-api\\prisma\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -145,12 +145,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/abdialghi/Documents/Purwadhika/JCWDOL20/03_Back_end/intro-class-api/prisma/schema.prisma",
+    "sourceFilePath": "D:\\adi\\github\\jcwdol020-classbase-api\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -164,6 +164,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
