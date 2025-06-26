@@ -5,6 +5,7 @@ import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { transport } from "../config/nodemailer";
 import { cloudinaryUpload } from "../config/cloudinary";
+import AppError from "../errors/AppError";
 
 class AuthController {
   public async register(
@@ -20,7 +21,7 @@ class AuthController {
       });
 
       if (existingUser) {
-        throw { rc: 400, success: false, message: "User already exist" };
+        throw new AppError("User already exist", 400);
       }
 
       const newUser = await prisma.user.create({
@@ -60,12 +61,12 @@ class AuthController {
       });
 
       if (!findUser) {
-        throw { rc: 404, message: "User not exist" };
+        throw new AppError("User not exist", 404);
       }
 
       const comparePass = await compare(req.body.password, findUser.password);
       if (!comparePass) {
-        throw { rc: 401, message: "Password is wrong" };
+        throw new AppError("Password is wrong", 401);
       }
 
       const token = sign(
@@ -94,7 +95,7 @@ class AuthController {
     try {
       //
       if (!req.file) {
-        throw { rc: 400, message: "No file exist" };
+        throw new AppError("No file exist", 400);
       }
 
       const upload = await cloudinaryUpload(req.file);
