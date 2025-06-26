@@ -105,7 +105,7 @@ class AuthController {
           imgProfile: upload.secure_url,
         },
         where: {
-          id: Number(req.params.id),
+          id: res.locals.decript.id,
         },
       });
 
