@@ -7,7 +7,12 @@ export const findUserByEmail = async (email: string) => {
   });
 };
 
-export const createUser = async (data: User) => {
+type CreateUserType = Omit<
+  User,
+  "id" | "imgProfile" | "createdAt" | "updatedAt"
+>;
+
+export const createUser = async (data: CreateUserType) => {
   return prisma.user.create({
     data,
   });
