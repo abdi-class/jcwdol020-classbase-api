@@ -19,9 +19,10 @@ class AuthRouter {
   private initializeRoutes(): void {
     this.route.post("/regis", regisValidation, this.authController.register);
     this.route.post("/login", loginValidation, this.authController.login);
+
+    this.route.use(verifyToken);
     this.route.patch(
       "/profile-img",
-      verifyToken,
       uploaderMemory().single("img"),
       this.authController.uploadProfile
     );
