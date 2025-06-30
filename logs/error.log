@@ -1,3 +1,4 @@
 2025-06-26 20:05:15 [ERROR]: POST /auth/regis: User already exist {"rc":400,"success":false,"message":"User already exist"}
 2025-06-26 20:25:34 [ERROR]: POST /auth/regis: User already exist {"statusCode":400,"success":false}
 2025-06-26 20:29:18 [ERROR]: POST /auth/regis: User already exist {"statusCode":400,"success":false,"message":"User already exist"}
+2025-06-30 19:44:04 [ERROR]: POST /auth/regis: User already exist {"statusCode":400,"success":false,"message":"User already exist"}
