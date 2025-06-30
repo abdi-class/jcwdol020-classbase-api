@@ -17,3 +17,12 @@ export const createUser = async (data: CreateUserType) => {
     data,
   });
 };
+
+export const updateUser = async (data: Partial<User>, id: number) => {
+  return prisma.user.update({
+    data,
+    where: {
+      id,
+    },
+  });
+};

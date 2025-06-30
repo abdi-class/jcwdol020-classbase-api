@@ -6,7 +6,11 @@ import { sign } from "jsonwebtoken";
 import { transport } from "../config/nodemailer";
 import { cloudinaryUpload } from "../config/cloudinary";
 import AppError from "../errors/AppError";
-import { loginService, registerService } from "../services/auth.service";
+import {
+  loginService,
+  registerService,
+  updateProfileService,
+} from "../services/auth.service";
 
 class AuthController {
   public async register(
@@ -52,21 +56,7 @@ class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      //
-      if (!req.file) {
-        throw new AppError("No file exist", 400);
-      }
-
-      const upload = await cloudinaryUpload(req.file);
-
-      await prisma.user.update({
-        data: {
-          imgProfile: upload.secure_url,
-        },
-        where: {
-          id: res.locals.decript.id,
-        },
-      });
+      await updateProfileService(req.file, res.locals.decript.id);
 
       res.status(200).send({
         success: true,

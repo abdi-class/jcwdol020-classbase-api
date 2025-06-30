@@ -2,9 +2,14 @@ import AppError from "../errors/AppError";
 import { transport } from "../config/nodemailer";
 import { hashPassword } from "../utils/hash";
 import { prisma } from "../config/prisma";
-import { createUser, findUserByEmail } from "../repositories/user.repository";
+import {
+  createUser,
+  findUserByEmail,
+  updateUser,
+} from "../repositories/user.repository";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { cloudinaryUpload } from "../config/cloudinary";
 
 export const registerService = async (data: any) => {
   const { username, email, password, role } = data;
@@ -54,4 +59,17 @@ export const loginService = async (data: any) => {
     user: findUser,
     token,
   };
+};
+
+export const updateProfileService = async (
+  file: Express.Multer.File | undefined,
+  id: number
+) => {
+  if (!file) {
+    throw new AppError("No file exist", 400);
+  }
+
+  const upload = await cloudinaryUpload(file);
+
+  await updateUser({ imgProfile: upload.secure_url }, id);
 };
