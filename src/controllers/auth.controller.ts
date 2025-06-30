@@ -6,6 +6,7 @@ import { sign } from "jsonwebtoken";
 import { transport } from "../config/nodemailer";
 import { cloudinaryUpload } from "../config/cloudinary";
 import AppError from "../errors/AppError";
+import { registerService } from "../services/auth.service";
 
 class AuthController {
   public async register(
@@ -14,30 +15,7 @@ class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const existingUser = await prisma.user.findUnique({
-        where: {
-          email: req.body.email,
-        },
-      });
-
-      if (existingUser) {
-        throw new AppError("User already exist", 400);
-      }
-
-      const newUser = await prisma.user.create({
-        data: {
-          ...req.body,
-          password: await hashPassword(req.body.password),
-          role: req.body.role || "admin",
-        },
-      });
-
-      await transport.sendMail({
-        from: process.env.MAILERSENDER,
-        to: newUser.email,
-        subject: "Verify Registration Account",
-        html: `<h1>Thank you for register account ${newUser.username}</h1>`,
-      });
+      await registerService(req.body);
 
       res.status(201).send({
         success: true,
