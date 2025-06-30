@@ -6,7 +6,7 @@ import { sign } from "jsonwebtoken";
 import { transport } from "../config/nodemailer";
 import { cloudinaryUpload } from "../config/cloudinary";
 import AppError from "../errors/AppError";
-import { registerService } from "../services/auth.service";
+import { loginService, registerService } from "../services/auth.service";
 
 class AuthController {
   public async register(
@@ -32,33 +32,14 @@ class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const findUser = await prisma.user.findUnique({
-        where: {
-          email: req.body.email,
-        },
-      });
-
-      if (!findUser) {
-        throw new AppError("User not exist", 404);
-      }
-
-      const comparePass = await compare(req.body.password, findUser.password);
-      if (!comparePass) {
-        throw new AppError("Password is wrong", 401);
-      }
-
-      const token = sign(
-        { id: findUser.id, role: findUser.role },
-        process.env.TOKEN_KEY || "secret",
-        { expiresIn: "1h" }
-      );
+      const loginUser = await loginService(req.body);
 
       res.status(200).send({
-        username: findUser.username,
-        email: findUser.email,
-        imgProfile: findUser.imgProfile,
-        role: findUser.role,
-        token,
+        username: loginUser.user.username,
+        email: loginUser.user.email,
+        imgProfile: loginUser.user.imgProfile,
+        role: loginUser.user.role,
+        token: loginUser.token,
       });
     } catch (error) {
       next(error);

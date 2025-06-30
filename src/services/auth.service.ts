@@ -3,6 +3,8 @@ import { transport } from "../config/nodemailer";
 import { hashPassword } from "../utils/hash";
 import { prisma } from "../config/prisma";
 import { createUser, findUserByEmail } from "../repositories/user.repository";
+import { compare } from "bcrypt";
+import { sign } from "jsonwebtoken";
 
 export const registerService = async (data: any) => {
   const { username, email, password, role } = data;
@@ -28,4 +30,28 @@ export const registerService = async (data: any) => {
   });
 
   return newUser;
+};
+
+export const loginService = async (data: any) => {
+  const findUser = await findUserByEmail(data.email);
+
+  if (!findUser) {
+    throw new AppError("User not exist", 404);
+  }
+
+  const comparePass = await compare(data.password, findUser.password);
+  if (!comparePass) {
+    throw new AppError("Password is wrong", 401);
+  }
+
+  const token = sign(
+    { id: findUser.id, role: findUser.role },
+    process.env.TOKEN_KEY || "secret",
+    { expiresIn: "1h" }
+  );
+
+  return {
+    user: findUser,
+    token,
+  };
 };
